@@ -150,3 +150,41 @@ html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
 
 /* Recherche des thèmes toujours accessible et testable. */
 .page-themes .theme-search{position:relative!important;left:auto!important;opacity:1;visibility:visible}
+
+
+/* Nouveau fond propre : l'ancienne capture contenant ses propres titres
+   ne doit jamais être utilisée en arrière-plan de l'accueil. */
+.page-home .scene{background:
+ radial-gradient(ellipse 56% 30% at 28% 66%,rgba(250,146,70,.88),transparent 82%),
+ radial-gradient(ellipse 38% 18% at 52% 70%,rgba(241,172,90,.36),transparent 85%),
+ linear-gradient(180deg,#031523 0%,#082a3c 38%,#31414c 59%,#132d41 72%,#03101b 100%);
+}
+.page-home .scene-clean-backdrop{display:block;background:transparent}
+.page-home .scene-clean-backdrop::before{
+ content:"";position:absolute;inset:42% 0 0;
+ background:linear-gradient(180deg,transparent 0%,rgba(3,13,25,.18) 37%,#04101b 100%);
+ clip-path:polygon(0 63%,9% 46%,18% 54%,31% 77%,43% 79%,55% 65%,64% 57%,71% 33%,80% 26%,90% 43%,100% 28%,100% 100%,0 100%);
+ opacity:.92;
+}
+.page-home .scene-clean-backdrop::after{
+ content:"";position:absolute;inset:59% 0 0;
+ background:repeating-linear-gradient(176deg,rgba(248,179,116,.13) 0px,transparent 3px,transparent 15px,rgba(245,193,131,.07) 17px),
+ linear-gradient(180deg,rgba(69,98,117,.4),rgba(2,16,28,.74) 92%);
+ clip-path:polygon(16% 17%,67% 22%,100% 45%,100% 100%,0 100%,0 45%);
+ opacity:.65;
+}
+.page-home .scene-clouds{opacity:.28;filter:blur(14px);mix-blend-mode:screen}
+.page-home .scene-moon{
+ inset:auto;top:12%;right:12%;left:auto;width:clamp(105px,12vw,180px);height:clamp(105px,12vw,180px);
+ object-fit:contain!important;object-position:center;mix-blend-mode:screen;opacity:.75;
+}
+.page-home .scene-lantern{
+ inset:auto;left:0;bottom:0;width:clamp(175px,25vw,340px);height:clamp(250px,45vw,520px);
+ object-fit:contain!important;object-position:left bottom;mix-blend-mode:screen;opacity:.86;
+}
+.page-home .lantern-light{opacity:.55}
+.page-home .hero{z-index:2}
+@media(max-width:600px){
+ .page-home .scene-moon{right:3%;top:16%;width:100px;height:100px}
+ .page-home .scene-lantern{width:160px;height:300px;opacity:.58}
+}
