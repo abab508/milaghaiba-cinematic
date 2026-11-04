@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 import './style.css';
 
 const copy = {
@@ -34,7 +34,7 @@ ar:['التوحيد والإيمان والأنبياء…','الصلاة وال
 function App(){
  const reduced=useReducedMotion();
  const [lang,setLang]=useState('fr');
- const [page,setPage]=useState('home');
+ const page='themes';
  const [effects,setEffects]=useState(!reduced);
  const [sound,setSound]=useState(false);
  const audioRef=useRef(null);
@@ -46,32 +46,20 @@ function App(){
  const [indexOpen,setIndexOpen]=useState(false);
  const [activeTheme,setActiveTheme]=useState(null);
  const [referenceLoaded,setReferenceLoaded]=useState(false);
- const [referenceFailed,setReferenceFailed]=useState(false);
+
  const [referenceMenu,setReferenceMenu]=useState(null);
  const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
  useEffect(()=>{if(reduced)setEffects(false)},[reduced]);
- const goExplore=(openSearch=false,alphabet=false)=>{setPage('themes');setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);setReferenceMenu(openSearch?'search':alphabet?'index':null);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
- const goHome=()=>{setPage('home');setNotice('');setQuery('');setActiveTheme(null);setReferenceMenu(null);window.scrollTo({top:0,behavior:'auto'})};
+ const goExplore=(openSearch=false,alphabet=false)=>{setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);setReferenceMenu(openSearch?'search':alphabet?'index':null);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
+ const goHome=()=>{setNotice('');setQuery('');setActiveTheme(null);setReferenceMenu(null);window.scrollTo({top:0,behavior:'auto'})};
  const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>!query.trim()||(indexOpen&&query.trim().length===1?name.toLocaleUpperCase().startsWith(query.trim().toLocaleUpperCase()):name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
- return <div className={'app '+(effects?'animated':'still')+' page-'+page+(referenceLoaded&&page==='themes'?' has-theme-reference':'')}>
-  {page==='home'&&<div className="scene" aria-hidden="true">
-   <div className="scene-base scene-clean-backdrop" />
-   <img className="scene-stars" src="/assets/scene/stars.png" alt=""/>
-   <img className="scene-clouds" src="/assets/scene/clouds.png" alt=""/>
-   <img className="scene-moon" src="/assets/scene/moon.png" alt=""/>
-   <img className="scene-lantern" src="/assets/scene/lantern.png" alt=""/>
-   <div className="lantern-light"/>
-   <div className="sea-reflection"/>
-   <div className="book-reflection"/>
-   <div className="scene-tint"/>
-   <div className="scene-vignette"/>
-  </div>}
+ return <div className={'app '+(effects?'animated':'still')+' page-'+page+(referenceLoaded?' has-theme-reference':'')}>
   <header className="header">
    <button className="brand" onClick={goHome} aria-label="La Lumière des Hadiths — Accueil"><span className="brand-icon">⌂<span>▱</span></span><span>La Lumière<br/>des Hadiths</span></button>
    <nav className="navigation" aria-label="Navigation principale">
-    <button onClick={goHome} aria-current={page==='home'?'page':undefined}>{t.home}</button>
-    <button onClick={()=>goExplore(false)} aria-current={page==='themes'?'page':undefined}>{t.themes}</button>
+    <button onClick={goHome} aria-current={undefined}>{t.home}</button>
+    <button onClick={()=>goExplore(false)} aria-current="page">{t.themes}</button>
     <button onClick={()=>goExplore(false)}>{t.chapters}</button>
     <button onClick={()=>goExplore(false,true)}>{t.index}</button>
     <button onClick={()=>goExplore(true)}>{t.search}</button>
@@ -83,24 +71,13 @@ function App(){
     <button className="icon-button" aria-pressed={sound} aria-label={sound?t.soundOff:t.soundOn} title={sound?t.soundOff:t.soundOn} onClick={toggleSound}>{sound?'♫':'♩'}</button>
    </div>
   </header>
-  {page==='home'? <main className="hero">
-   <motion.div className="hero-content" initial={effects?{opacity:0,y:22}:false} animate={{opacity:1,y:0}} transition={{duration:1.2,ease:'easeOut'}}>
-    <div className="hero-line" aria-hidden="true">✧</div>
-    <h1>{t.title}</h1>
-    <p className="hero-subtitle">{t.subtitle}</p>
-    <p className="hero-description">{t.description}</p>
-    <button className="cta" onClick={()=>goExplore(false)}>{t.action} <span aria-hidden="true">→</span></button>
-   </motion.div>
-   <div className="hero-footer" aria-label="Fonctionnalités de la bibliothèque">
-    <span><b aria-hidden="true">♧</b>{t.collections}</span><span><b aria-hidden="true">A</b>{t.alphabet}</span><span><b aria-hidden="true">◈</b>{t.variety}</span><span><b aria-hidden="true">♙</b>{t.navigation}</span>
-   </div>
-  </main> : <main className="themes-view">
+  <main className="themes-view">
    <button className="back" onClick={goHome}>← {t.back}</button>
    <h1>{indexOpen?t.index:t.explore}</h1><p>{t.exploreDetail}</p>
    {indexOpen&&<div className="alphabet" aria-label="Index alphabétique">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter=><button key={letter} onClick={()=>{setQuery(letter);setActiveTheme(null)}} aria-pressed={query.toUpperCase()===letter}>{letter}</button>)}<button onClick={()=>setQuery('')}>Tout</button></div>}
    <form className={'theme-search '+(searchOpen?'theme-search-active':'')} onSubmit={e=>e.preventDefault()} role="search"><label className="visually-hidden" htmlFor="theme-query">{t.queryPlaceholder}</label><span aria-hidden="true">⌕</span><input id="theme-query" type="search" placeholder={t.queryPlaceholder} value={query} onChange={e=>{setQuery(e.target.value);setActiveTheme(null)}}/></form>
    <div className="theme-reference-stage" hidden={!referenceLoaded} aria-label={t.explore}>
-     <img className="theme-reference-image" src="/assets/themes-reference.png" alt="" onLoad={()=>setReferenceLoaded(true)} onError={()=>setReferenceFailed(true)} />
+     <img className="theme-reference-image" src="/assets/themes-reference.png" alt="" onLoad={()=>setReferenceLoaded(true)} onError={()=>setReferenceLoaded(false)} />
      {t.categories.map((name,i)=>{
        const positions=[[8,25,26,23],[35,25,30,23],[67,25,29,23],[8,49,26,20],[35,49,30,20],[67,49,29,20],[8,70,26,22],[35,70,30,22],[67,70,29,22]];
        const [left,top,width,height]=positions[i];
@@ -128,7 +105,7 @@ function App(){
    {!referenceLoaded&&visibleThemes.length===0&&<p role="status">{t.noResults}</p>}
    {activeTheme!==null&&<section className={'theme-detail'+(referenceLoaded?' reference-detail':'')} aria-live="polite"><img src={activeTheme<8?`/assets/chapters/${activeTheme+1}.webp`:'/assets/scene/architecture.webp'} alt=""/><div><h2>{t.categories[activeTheme]}</h2><p>{t.soon}</p><button className="detail-back" onClick={()=>setActiveTheme(null)}>← {t.back}</button></div></section>}
    {notice&&<p className="notice" role="status">{notice}</p>}
-  </main>}
+  </main>
   <div className="screen-grain" aria-hidden="true"/>
  </div>
 }
