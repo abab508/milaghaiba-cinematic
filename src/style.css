@@ -280,3 +280,57 @@ html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
 @media(prefers-reduced-motion:reduce){
  .has-theme-reference .reference-themes-text::after{transition:none}
 }
+
+
+/* Unified cinematic header. The source artwork contains printed navigation:
+   conceal only that original navigation band and expose a single clickable menu.
+   No rectangular hover borders, and no permanent selected underline. */
+.has-theme-reference .reference-navigation-backdrop{
+ position:absolute;z-index:4;pointer-events:none;
+ top:0;left:20%;width:54%;height:7.65%;
+ background:
+ radial-gradient(circle at 9% 72%,#8fc6c477 0 1px,transparent 1.8px),
+ radial-gradient(circle at 42% 44%,#d2c5a966 0 1px,transparent 1.8px),
+ radial-gradient(circle at 79% 83%,#e0d4b459 0 1px,transparent 1.8px),
+ linear-gradient(180deg,#011522 0%,#021b2b 58%,#06243a 100%);
+ background-size:190px 100px,260px 130px,225px 160px,100% 100%;
+ -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 84%,transparent 100%);
+ mask-image:linear-gradient(to bottom,#000 0%,#000 84%,transparent 100%);
+}
+.has-theme-reference .reference-nav-link{
+ position:absolute;z-index:5;top:0;height:6.8%;
+ display:flex;align-items:flex-start;justify-content:center;
+ padding:1.05% 0 0;margin:0;border:0!important;outline:0;
+ color:#f5e9d8;background:none!important;border-radius:0;
+ box-shadow:none!important;isolation:auto;overflow:visible;
+ cursor:pointer;
+}
+.has-theme-reference .reference-nav-home{left:23%;width:9%}
+.has-theme-reference .reference-nav-themes{left:32%;width:8%}
+.has-theme-reference .reference-nav-chapters{left:40%;width:10%}
+.has-theme-reference .reference-nav-index{left:52%;width:8%}
+.has-theme-reference .reference-nav-search{left:61%;width:10%}
+.has-theme-reference .reference-nav-link::before,
+.has-theme-reference .reference-nav-link::after{content:none!important;display:none!important}
+.has-theme-reference .reference-nav-link span{
+ position:relative;z-index:1;
+ font:400 clamp(12px,1.35vw,23px)/1.1 Georgia,'Times New Roman',serif;
+ color:#f5e9d8;text-shadow:0 1px 5px #00141f;
+ white-space:nowrap;transition:color .18s ease;
+}
+.has-theme-reference .reference-nav-link span::after{
+ content:"";position:absolute;left:0;right:0;bottom:-11px;height:3px;
+ background:linear-gradient(90deg,transparent,#f6c46d 25%,#fff6c7 50%,#f6c46d 75%,transparent);
+ border-radius:50%;opacity:0;transform:scaleX(.65);
+ box-shadow:0 0 9px 2px #ffc75a55;
+ transition:opacity .18s ease,transform .18s ease;
+}
+.has-theme-reference .reference-nav-link:hover span,
+.has-theme-reference .reference-nav-link:focus-visible span{color:#f7d48b}
+.has-theme-reference .reference-nav-link:hover span::after,
+.has-theme-reference .reference-nav-link:focus-visible span::after{opacity:1;transform:scaleX(1)}
+.has-theme-reference .reference-nav-link:focus-visible span{outline:1px dotted #f9db91;outline-offset:5px}
+@media(prefers-reduced-motion:reduce){
+ .has-theme-reference .reference-nav-link span,
+ .has-theme-reference .reference-nav-link span::after{transition:none}
+}
