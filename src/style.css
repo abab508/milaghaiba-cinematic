@@ -334,3 +334,89 @@ html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
  .has-theme-reference .reference-nav-link span,
  .has-theme-reference .reference-nav-link span::after{transition:none}
 }
+
+
+/* Theme interaction: no rectangular overlays, border or native tooltip. */
+.has-theme-reference .reference-hotspot{
+ border:0!important;outline:0!important;border-radius:0!important;background:transparent!important;
+ box-shadow:none!important;filter:none!important;transform:none!important;
+ overflow:visible;transition:none;
+}
+.has-theme-reference .reference-hotspot::after{
+ content:"";position:absolute;left:10%;top:10%;width:clamp(35px,5.2vw,82px);aspect-ratio:1;
+ border:0;border-radius:50%;pointer-events:none;opacity:0;transform:scale(.86);
+ background:radial-gradient(circle,#f6d79540 0%,#e7b85e26 35%,transparent 73%);
+ box-shadow:0 0 23px 7px #d9ae5166,inset 0 0 10px #fff1bc45;
+ transition:opacity .25s ease,transform .25s ease;
+}
+.has-theme-reference .reference-hotspot:hover::after,
+.has-theme-reference .reference-hotspot:focus-visible::after{
+ opacity:1;transform:scale(1.05)
+}
+.has-theme-reference .reference-hotspot:focus-visible{outline:2px dotted #f4d78e!important;outline-offset:-2px!important}
+/* Controls floating over the art's original right-hand navigation. */
+.has-theme-reference .reference-lang-trigger,.has-theme-reference .reference-fx-trigger,.has-theme-reference .reference-settings-trigger{
+ position:absolute;z-index:7;top:0;height:7%;display:flex;justify-content:center;align-items:flex-start;
+ padding-top:1.15%;border:0;background:transparent;color:#f2dfb3;cursor:pointer;box-shadow:none;
+}
+.has-theme-reference .reference-lang-trigger{left:84%;width:7%;gap:5px;font-size:clamp(12px,1.2vw,20px)}
+.has-theme-reference .reference-fx-trigger{left:91.8%;width:3%;font-size:clamp(15px,1.7vw,27px)}
+.has-theme-reference .reference-settings-trigger{left:95.5%;width:3.5%}
+.has-theme-reference .reference-lang-trigger:hover,.has-theme-reference .reference-fx-trigger:hover,
+.has-theme-reference .reference-settings-trigger:hover{filter:brightness(1.4)}
+.has-theme-reference .reference-lang-trigger:focus-visible,.has-theme-reference .reference-fx-trigger:focus-visible,
+.has-theme-reference .reference-settings-trigger:focus-visible{outline:2px solid #e8c27f;outline-offset:-5px}
+/* Settings stays in the same night-blue / gold palette. */
+.settings-shade{position:fixed;inset:0;z-index:35;background:#00111ab9;display:grid;place-items:center;padding:18px;backdrop-filter:blur(6px)}
+.settings-dialog{width:min(430px,96vw);max-height:90svh;overflow:auto;position:relative;
+ border:1px solid #d5ac6a;border-radius:17px;background:linear-gradient(145deg,#0b3540,#031725);
+ box-shadow:0 30px 95px #000c;color:#f6e8cc;padding:28px;display:flex;flex-direction:column;gap:17px;
+}
+.settings-dialog h2{margin:0 0 4px;text-align:center;font-weight:400;font-size:31px;color:#f5d49e}
+.settings-dialog label,.settings-option span{font-size:16px}
+.settings-dialog select,.settings-option button{
+ font:inherit;color:#f8e5bc;background:#102e3c;border:1px solid #b58d53;
+ border-radius:8px;padding:9px 12px;cursor:pointer;max-width:100%;
+}
+.settings-option{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.settings-dialog .reference-panel-close{z-index:3}
+html[dir=rtl] .settings-dialog{text-align:right}
+/* Image has French wording baked into its pixels.
+   Cover only title/subtitle regions for EN/AR, rather than superimposing another language. */
+.locale-translation .translated-scene-labels{position:absolute;inset:0;pointer-events:none;z-index:2}
+.locale-translation .translated-heading{position:absolute;left:23%;top:11.5%;width:54%;height:13.5%;
+ display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0;
+ text-align:center;color:#f5e8cf;
+ background:radial-gradient(ellipse at 50% 50%,#062636 52%,#052134e9 72%,transparent 100%);
+}
+.locale-translation .translated-heading h1{margin:0;color:#f7e8ce;font-size:clamp(19px,3.3vw,52px);font-weight:400;line-height:1.1}
+.locale-translation .translated-heading p{margin:5px 0 0;font-size:clamp(10px,1.25vw,19px);line-height:1.2}
+.locale-translation .translated-topic{
+ position:absolute;display:flex;flex-direction:column;justify-content:center;
+ gap:2px;width:22%;height:9%;border-radius:20px;
+ background:linear-gradient(90deg,#061d29d9 2%,#06212de5 73%,#06212d00 100%);
+ color:#fff1d5;padding:5px 10px;
+}
+.locale-translation .translated-topic strong{font-size:clamp(11px,1.7vw,26px);font-weight:500;line-height:1.12}
+.locale-translation .translated-topic small{font-size:clamp(9px,1vw,16px);line-height:1.15}
+.locale-translation .translated-topic-0{left:15.2%;top:28.1%}
+.locale-translation .translated-topic-1{left:45.5%;top:28.1%}
+.locale-translation .translated-topic-2{left:75%;top:28.1%}
+.locale-translation .translated-topic-3{left:15.2%;top:51.3%}
+.locale-translation .translated-topic-4{left:45.5%;top:51.3%}
+.locale-translation .translated-topic-5{left:75%;top:51.3%}
+.locale-translation .translated-topic-6{left:15.2%;top:72.8%}
+.locale-translation .translated-topic-7{left:45.5%;top:72.8%}
+.locale-translation .translated-topic-8{left:75%;top:72.8%}
+.locale-translation .translated-topic[dir=rtl]{text-align:right;background:linear-gradient(270deg,#061d29d9 2%,#06212de5 73%,#06212d00 100%)}
+.locale-translation .reference-hotspot{z-index:5}
+.mode-light .settings-dialog,.mode-light .reference-panel{background:linear-gradient(150deg,#28464b,#112c36)}
+@media(max-width:600px){
+ .locale-translation .translated-topic{height:11%;width:25%;padding:3px 5px}
+ .locale-translation .translated-topic strong{font-size:clamp(9px,2.5vw,14px)}
+ .locale-translation .translated-topic small{display:none}
+ .locale-translation .translated-topic-0,.locale-translation .translated-topic-3,.locale-translation .translated-topic-6{left:13%}
+ .locale-translation .translated-topic-1,.locale-translation .translated-topic-4,.locale-translation .translated-topic-7{left:42%}
+ .locale-translation .translated-topic-2,.locale-translation .translated-topic-5,.locale-translation .translated-topic-8{left:72%}
+}
+@media(prefers-reduced-motion:reduce){.has-theme-reference .reference-hotspot::after{transition:none}}
