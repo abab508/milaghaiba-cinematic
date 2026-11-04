@@ -45,13 +45,15 @@ function App(){
  const [searchOpen,setSearchOpen]=useState(false);
  const [indexOpen,setIndexOpen]=useState(false);
  const [activeTheme,setActiveTheme]=useState(null);
+ const [referenceLoaded,setReferenceLoaded]=useState(false);
+ const [referenceFailed,setReferenceFailed]=useState(false);
  const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
  useEffect(()=>{if(reduced)setEffects(false)},[reduced]);
  const goExplore=(openSearch=false,alphabet=false)=>{setPage('themes');setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
  const goHome=()=>{setPage('home');setNotice('');setQuery('');setActiveTheme(null);window.scrollTo({top:0,behavior:'auto'})};
  const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>!query.trim()||(indexOpen&&query.trim().length===1?name.toLocaleUpperCase().startsWith(query.trim().toLocaleUpperCase()):name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
- return <div className={'app '+(effects?'animated':'still')+' page-'+page}>
+ return <div className={'app '+(effects?'animated':'still')+' page-'+page+(referenceLoaded&&page==='themes'?' has-theme-reference':'')}>
   {page==='home'&&<div className="scene" aria-hidden="true">
    <div className="scene-base scene-clean-backdrop" />
    <img className="scene-stars" src="/assets/scene/stars.png" alt=""/>
@@ -96,10 +98,19 @@ function App(){
    <h1>{indexOpen?t.index:t.explore}</h1><p>{t.exploreDetail}</p>
    {indexOpen&&<div className="alphabet" aria-label="Index alphabétique">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter=><button key={letter} onClick={()=>{setQuery(letter);setActiveTheme(null)}} aria-pressed={query.toUpperCase()===letter}>{letter}</button>)}<button onClick={()=>setQuery('')}>Tout</button></div>}
    <form className={'theme-search '+(searchOpen?'theme-search-active':'')} onSubmit={e=>e.preventDefault()} role="search"><label className="visually-hidden" htmlFor="theme-query">{t.queryPlaceholder}</label><span aria-hidden="true">⌕</span><input id="theme-query" type="search" placeholder={t.queryPlaceholder} value={query} onChange={e=>{setQuery(e.target.value);setActiveTheme(null)}}/></form>
-   <div className="theme-grid">
-    {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>{setActiveTheme(i);setNotice('')}} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/chapters/8.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><span className="theme-description">{themeDescriptions[lang][i]}</span></button>)}
+   <div className="theme-reference-stage" hidden={!referenceLoaded} aria-label={t.explore}>
+     <img className="theme-reference-image" src="/assets/themes-reference.webp" alt="" onLoad={()=>setReferenceLoaded(true)} onError={()=>setReferenceFailed(true)} />
+     {t.categories.map((name,i)=>{
+       const positions=[[8,25,26,23],[35,25,30,23],[67,25,29,23],[8,49,26,20],[35,49,30,20],[67,49,29,20],[8,70,26,22],[35,70,30,22],[67,70,29,22]];
+       const [left,top,width,height]=positions[i];
+       return <button type="button" key={i} className="reference-hotspot" style={{left:left+'%',top:top+'%',width:width+'%',height:height+'%'}} onClick={()=>{setActiveTheme(i);setNotice('')}} aria-label={name} title={name}/>;
+     })}
+     <button type="button" className="reference-nav-home" aria-label={t.home} onClick={goHome}/>
    </div>
-   {visibleThemes.length===0&&<p role="status">{t.noResults}</p>}
+   {!referenceLoaded&&<div className="theme-grid">
+    {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>{setActiveTheme(i);setNotice('')}} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/chapters/8.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><span className="theme-description">{themeDescriptions[lang][i]}</span></button>)}
+   </div>}
+   {!referenceLoaded&&visibleThemes.length===0&&<p role="status">{t.noResults}</p>}
    {activeTheme!==null&&<section className="theme-detail" aria-live="polite"><img src={activeTheme<8?`/assets/chapters/${activeTheme+1}.webp`:'/assets/scene/architecture.webp'} alt=""/><div><h2>{t.categories[activeTheme]}</h2><p>{t.soon}</p><button className="detail-back" onClick={()=>setActiveTheme(null)}>← {t.back}</button></div></section>}
    {notice&&<p className="notice" role="status">{notice}</p>}
   </main>}
