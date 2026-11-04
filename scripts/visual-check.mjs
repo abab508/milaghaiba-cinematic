@@ -21,8 +21,8 @@ async function checkViewport(width, height, name) {
   const beforeHover = await themeLink.locator('.reference-themes-text').evaluate(el => getComputedStyle(el, '::after').opacity);
   assert(Number(beforeHover) === 0, name + ': Themes has no permanent underline');
   await themeLink.hover({ force: true });
-  const afterHover = await themeLink.locator('.reference-themes-text').evaluate(el => getComputedStyle(el, '::after').opacity);
-  assert(Number(afterHover) > 0, name + ': Themes underline appears on hover');
+  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.reference-themes-text'), '::after').opacity) > .5);
+  assert(true, name + ': Themes underline appears on hover');
   await page.mouse.move(0,0);
 
   assert(await page.locator('.theme-item').count() === 0, name + ': anciennes cartes absentes');
