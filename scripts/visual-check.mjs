@@ -18,7 +18,7 @@ async function checkViewport(width, height, name) {
   const assets = await page.locator('.scene img').evaluateAll(items =>
     items.map(img => ({ src: img.getAttribute('src'), loaded: img.complete && img.naturalWidth > 0 }))
   );
-  assert(assets.length === 5, name + ': cinq images de décor prévues');
+  assert(assets.length === 4, name + ': quatre images de calques prévues');
   assert(assets.every(a => a.loaded), name + ': tous les calques images chargés (' + JSON.stringify(assets) + ')');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2);
   assert(!overflow, name + ': sans débordement horizontal');
