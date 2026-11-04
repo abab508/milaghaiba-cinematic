@@ -1,40 +1,17 @@
-# Milaghaiba Cinematic — La Lumière des Hadiths
+# La Lumière des Hadiths — Milaghaiba Cinematic
 
-Nouvelle interface distincte de l'ancien site Milaghaiba.
+Interface cinématographique React/Vite dédiée au nouveau dépôt `abab508/milaghaiba-cinematic`. Reconstitution des six écrans de la maquette utilisateur : accueil, choix des thèmes, chapitres, lecture, index A–Z, recueils animés. Inclut une navigation mobile adaptée, transitions Motion, ambiance sonore facultative et recherche locale de démonstration.
 
-## État du développement (4 novembre 2026)
+## Installation
 
-- Accueil panoramique inspiré de la **première vignette** de la référence utilisateur.
-- Ciel, lune, nuages et lanterne en calques d'images distincts, avec animations CSS et option de réduction des effets.
-- Contenus FR / EN / AR, avec sens RTL pour l'arabe.
-- Navigation accueil → thèmes.
-- Neuf thèmes ; les huit premières cartes réemploient les illustrations locales déjà présentes dans `public/assets/chapters/`, la neuvième utilise provisoirement le fond.
-- Recherche locale parmi les titres des thèmes.
-- Ambiance sonore synthétique activable manuellement (pas encore un véritable son de lanterne ou de paysage).
-- Contrôle de build via GitHub Actions.
-
-## Démarrage
-
-```sh
+```bash
 npm install
 npm run dev
-```
-
-## Build
-
-```sh
 npm run build
 ```
 
-## Réserves importantes
+## Important
 
-**La correspondance pixel par pixel avec l'image de référence n'est pas encore validée.** Les illustrations originales ne sont pas toutes découpées en véritables calques propres, certaines commandes de navigation détaillée restent des prototypes, les hadiths et leurs sources ne sont pas encore branchés.
+Les six décors `public/assets/reference/` sont des adaptations de la capture de référence fournie par l'utilisateur ; certaines portions du visuel contiennent des textes imprimés et ne constituent donc pas encore des objets graphiques indépendants. Les titres et zones interactives ont aussi été reconstruits en React au-dessus de ces décors pour les fonctionnalités de navigation. Les hadiths et références authentiques ne sont pas encore importés : l'interface n'invente pas de sources.
 
-Le dépôt historique Milaghaiba n'a pas été modifié. Le code de l'ancienne interface du dépôt *cinematic* a été remplacé sur `main` ; les ressources graphiques existantes ont été préservées pour éviter leur perte.
-
-## Étapes suivantes
-
-1. Prévisualisation navigateur réelle, comparaison avec la référence desktop et mobile.
-2. Reconstruction fidèle des lanternes, du logo et de la typographie.
-3. Extraction / remplacement des calques visuels pour rendre les objets indépendants.
-4. Connexion progressive aux thèmes, recueils, chapitres et hadiths vérifiés.
+Cette refonte ne modifie pas l'ancien dépôt `abab508/newhadith`.
