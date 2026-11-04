@@ -8,21 +8,21 @@ const copy = {
  title:'Les Hadiths',subtitle:'Une lumière pour chaque époque',
  description:'Explorez l’ensemble des enseignements du Prophète ﷺ\nà travers une expérience immersive et interactive.',
  action:"Commencer l’exploration",collections:'+90 recueils',alphabet:'A à Z',variety:'Thèmes variés',navigation:'Navigation intuitive',
- explore:'Choisissez un thème',exploreDetail:'Explorez les chapitres selon vos centres d’intérêt',back:'Retour à l’accueil',
+ explore:'Choisissez un thème',exploreDetail:'Explorez les chapitres selon vos centres d’intérêt',back:'Retour à l’accueil',queryPlaceholder:'Rechercher un thème…',noResults:'Aucun thème trouvé',
  categories:['La croyance','L’adoration','La vie du Prophète ﷺ','Les relations','Les comportements','Les signes de la fin des temps','La science','Les maladies et remèdes','Autres thèmes'],
  soundOn:'Activer le son',soundOff:'Couper le son',motionOn:'Réduire les effets',motionOff:'Activer les effets', soon:'La navigation détaillée sera ajoutée après cette première scène.' },
  en: { home:'Home',themes:'Themes',chapters:'Chapters',index:'A–Z',search:'Search',
  title:'The Hadiths',subtitle:'A light for every era',
  description:'Explore the teachings of the Prophet ﷺ\nthrough an immersive and interactive experience.',
  action:'Start exploring',collections:'90+ collections',alphabet:'A to Z',variety:'Various themes',navigation:'Intuitive navigation',
- explore:'Choose a theme',exploreDetail:'Explore chapters based on your interests',back:'Back to homepage',
+ explore:'Choose a theme',exploreDetail:'Explore chapters based on your interests',back:'Back to homepage',queryPlaceholder:'Search for a theme…',noResults:'No matching theme',
  categories:['Belief','Worship','Life of the Prophet ﷺ','Relationships','Conduct','Signs of the Last Hour','Knowledge','Illness and remedies','Other themes'],
  soundOn:'Enable sound',soundOff:'Mute sound',motionOn:'Reduce motion',motionOff:'Enable motion',soon:'Detailed chapter navigation will be added after this first scene.' },
  ar: { home:'الرئيسية',themes:'المواضيع',chapters:'الأبواب',index:'أ–ي',search:'بحث',
  title:'الأحاديث النبوية',subtitle:'نور لكل زمان',
  description:'استكشف تعاليم النبي ﷺ\nمن خلال تجربة تفاعلية غامرة.',
  action:'ابدأ الاستكشاف',collections:'المجموعات',alphabet:'الفهرس',variety:'مواضيع متنوعة',navigation:'تصفح تفاعلي',
- explore:'اختر موضوعاً',exploreDetail:'تصفح الأبواب حسب اهتماماتك',back:'العودة للرئيسية',
+ explore:'اختر موضوعاً',exploreDetail:'تصفح الأبواب حسب اهتماماتك',back:'العودة للرئيسية',queryPlaceholder:'ابحث عن موضوع…',noResults:'لا توجد نتائج',
  categories:['الإيمان','العبادات','السيرة النبوية','العلاقات','الأخلاق','أشراط الساعة','العلم','الطب والتداوي','مواضيع أخرى'],
  soundOn:'تفعيل الصوت',soundOff:'إيقاف الصوت',motionOn:'تقليل الحركة',motionOff:'تفعيل الحركة',soon:'ستتم إضافة تفاصيل الأبواب بعد هذا المشهد الأول.' }
 };
@@ -37,13 +37,16 @@ function App(){
  const toggleSound=async()=>{if(audioRef.current){await audioRef.current.close();audioRef.current=null;setSound(false);return;}try{const ctx=new (window.AudioContext||window.webkitAudioContext)();await ctx.resume();const osc=ctx.createOscillator();const gain=ctx.createGain();const filter=ctx.createBiquadFilter();osc.type='sine';osc.frequency.value=110;filter.type='lowpass';filter.frequency.value=180;gain.gain.value=0.012;osc.connect(filter).connect(gain).connect(ctx.destination);osc.start();audioRef.current=ctx;setSound(true)}catch{setSound(false)}};
  useEffect(()=>()=>{audioRef.current?.close()},[]);
  const [notice,setNotice]=useState('');
+ const [query,setQuery]=useState('');
+ const [searchOpen,setSearchOpen]=useState(false);
  const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
  useEffect(()=>{if(reduced)setEffects(false)},[reduced]);
- const goExplore=()=>{setPage('themes');setNotice('');window.scrollTo({top:0,behavior:effects?'smooth':'instant'})};
- const goHome=()=>{setPage('home');setNotice('');window.scrollTo({top:0,behavior:'instant'})};
+ const goExplore=(openSearch=false)=>{setPage('themes');setNotice('');setSearchOpen(openSearch);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
+ const goHome=()=>{setPage('home');setNotice('');window.scrollTo({top:0,behavior:'auto'})};
+ const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()));
  return <div className={'app '+(effects?'animated':'still')}>
-  <div className="scene" role="presentation">
+  <div className="scene" aria-hidden="true">
    <img className="scene-base" src="/assets/scene/architecture.webp" alt=""/>
    <img className="scene-stars" src="/assets/scene/stars.png" alt=""/>
    <img className="scene-clouds" src="/assets/scene/clouds.png" alt=""/>
@@ -57,10 +60,10 @@ function App(){
    <button className="brand" onClick={goHome} aria-label="La Lumière des Hadiths — Accueil"><span className="brand-icon">⌂<span>▱</span></span><span>La Lumière<br/>des Hadiths</span></button>
    <nav className="navigation" aria-label="Navigation principale">
     <button onClick={goHome} aria-current={page==='home'?'page':undefined}>{t.home}</button>
-    <button onClick={goExplore} aria-current={page==='themes'?'page':undefined}>{t.themes}</button>
-    <button onClick={goExplore}>{t.chapters}</button>
-    <button onClick={goExplore}>{t.index}</button>
-    <button onClick={goExplore}>{t.search}</button>
+    <button onClick={()=>goExplore(false)} aria-current={page==='themes'?'page':undefined}>{t.themes}</button>
+    <button onClick={()=>goExplore(false)}>{t.chapters}</button>
+    <button onClick={()=>goExplore(false)}>{t.index}</button>
+    <button onClick={()=>goExplore(true)}>{t.search}</button>
    </nav>
    <div className="controls">
     <label className="visually-hidden" htmlFor="lang">Langue / Language</label>
@@ -75,7 +78,7 @@ function App(){
     <h1>{t.title}</h1>
     <p className="hero-subtitle">{t.subtitle}</p>
     <p className="hero-description">{t.description}</p>
-    <button className="cta" onClick={goExplore}>{t.action} <span aria-hidden="true">→</span></button>
+    <button className="cta" onClick={()=>goExplore(false)}>{t.action} <span aria-hidden="true">→</span></button>
    </motion.div>
    <div className="hero-footer" aria-label="Fonctionnalités de la bibliothèque">
     <span><b aria-hidden="true">♧</b>{t.collections}</span><span><b aria-hidden="true">A</b>{t.alphabet}</span><span><b aria-hidden="true">◈</b>{t.variety}</span><span><b aria-hidden="true">♙</b>{t.navigation}</span>
@@ -83,9 +86,11 @@ function App(){
   </main> : <main className="themes-view">
    <button className="back" onClick={goHome}>← {t.back}</button>
    <h1>{t.explore}</h1><p>{t.exploreDetail}</p>
+   <form className={'theme-search '+(searchOpen?'theme-search-active':'')} onSubmit={e=>e.preventDefault()} role="search"><label className="visually-hidden" htmlFor="theme-query">{t.queryPlaceholder}</label><span aria-hidden="true">⌕</span><input id="theme-query" type="search" placeholder={t.queryPlaceholder} value={query} onChange={e=>setQuery(e.target.value)}/></form>
    <div className="theme-grid">
-    {t.categories.map((name,i)=><button key={i} className="theme-item" onClick={()=>setNotice(t.soon)}><span className="theme-icon">{icons[i]}</span><span>{name}</span><small>→</small></button>)}
+    {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>setNotice(t.soon)} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/scene/architecture.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><small aria-hidden="true">→</small></button>)}
    </div>
+   {visibleThemes.length===0&&<p role="status">{t.noResults}</p>}
    {notice&&<p className="notice" role="status">{notice}</p>}
   </main>}
   <div className="screen-grain" aria-hidden="true"/>
