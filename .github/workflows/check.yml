@@ -1,15 +1,43 @@
-name: Build check
+name: Build and visual previews
 on:
   push:
     branches: [main]
   pull_request:
+
 jobs:
-  build:
+  build-and-preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install --no-audit --no-fund
-      - run: npm run build
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build
+        run: npm run build
+      - name: Install browser for screenshots
+        run: |
+          npm install --no-save playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Start Vite preview
+        run: |
+          npm run preview -- --host 127.0.0.1 > /tmp/milaghaiba-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/milaghaiba-preview.log
+          exit 1
+      - name: Screenshot desktop and mobile
+        run: |
+          mkdir -p previews
+          npx playwright screenshot --browser chromium --viewport-size "1440,900" --wait-for-timeout 1800 http://127.0.0.1:4173/ previews/accueil-desktop.png
+          npx playwright screenshot --browser chromium --viewport-size "390,844" --wait-for-timeout 1800 http://127.0.0.1:4173/ previews/accueil-mobile.png
+      - name: Upload previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-preview
+          path: previews/*.png
+          if-no-files-found: ignore
