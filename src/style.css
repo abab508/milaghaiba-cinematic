@@ -13,3 +13,50 @@
 .detail-back{padding:9px 18px;border:1px solid #c5a166;border-radius:40px;background:#071a20;color:#f4deb4}
 html[dir=rtl] .theme-detail{text-align:right}
 @media(max-width:650px){.theme-detail{grid-template-columns:1fr}.theme-detail img{height:190px}.theme-detail div{padding:15px 18px}}
+
+
+/* Accueil de référence — zones 5 et 6. Les formes de base et objets ne changent pas.
+   Chaque effet est un calque distinct, non interactif et désactivable. */
+.sea-reflection{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  opacity:0;
+  background:
+    repeating-linear-gradient(177deg,transparent 0 15px,rgba(255,207,126,.14) 17px 19px,transparent 22px 34px),
+    linear-gradient(100deg,transparent 18%,rgba(255,188,99,.12) 53%,transparent 80%);
+  clip-path:polygon(41% 66%,88% 60%,100% 70%,100% 88%,53% 90%,39% 78%);
+  mix-blend-mode:screen;
+  transform-origin:60% 74%;
+}
+.book-reflection{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(116deg,transparent 12%,rgba(255,211,137,.24) 21%,rgba(255,221,156,.04) 26%,transparent 34%);
+  clip-path:polygon(14% 74%,42% 80%,39% 90%,13% 87%);
+  mix-blend-mode:screen;
+}
+.animated .sea-reflection{animation:sea-glimmer 7.5s ease-in-out infinite alternate}
+.animated .book-reflection{animation:book-gleam 12s ease-in-out infinite}
+@keyframes sea-glimmer{
+  from{opacity:.08;transform:translateX(-1%) scaleY(.98)}
+  to{opacity:.24;transform:translateX(1%) scaleY(1.015)}
+}
+@keyframes book-gleam{
+  0%,48%,100%{opacity:0;transform:translateX(-8%)}
+  55%{opacity:.25}
+  75%{opacity:.10;transform:translateX(18%)}
+}
+@media(prefers-reduced-motion:reduce){
+  .sea-reflection,.book-reflection{opacity:0!important;animation:none!important}
+}
+@media(max-width:600px){
+  .sea-reflection{clip-path:polygon(25% 68%,100% 63%,100% 85%,48% 88%)}
+  .book-reflection{clip-path:polygon(0 76%,35% 76%,32% 87%,0 87%)}
+}
