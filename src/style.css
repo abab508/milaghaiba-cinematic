@@ -74,3 +74,76 @@ html[dir=rtl] .theme-detail{text-align:right}
   .hero h1{font-size:clamp(48px,11vw,68px)}
   .scene{height:100svh}
 }
+
+
+/* Page des thèmes — direction cinématique indépendante.
+   Aucune superposition de l'ancien décor de l'accueil. */
+.page-themes{
+ min-height:100svh;
+ background:
+  radial-gradient(ellipse 70% 32% at 47% 10%,rgba(12,69,86,.58),transparent 90%),
+  radial-gradient(ellipse 55% 38% at 50% 88%,rgba(4,58,61,.46),transparent 90%),
+  linear-gradient(160deg,#03121f 0%,#052333 40%,#031723 79%,#020f1a 100%);
+}
+.page-themes::before{
+ content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+ background:
+  radial-gradient(circle at 9% 13%,#e1d09f7a 0 1px,transparent 2px),
+  radial-gradient(circle at 73% 8%,#e1d09f60 0 1px,transparent 2px),
+  radial-gradient(circle at 85% 22%,#d8e6ec77 0 1px,transparent 2px),
+  radial-gradient(circle at 41% 20%,#c8e1e963 0 1px,transparent 2px),
+  radial-gradient(circle at 18% 71%,#e1d09f55 0 1px,transparent 2px);
+ background-size:290px 310px;
+ opacity:.75;
+}
+.page-themes .header{min-height:75px;padding-top:13px;padding-bottom:13px}
+.page-themes .themes-view{max-width:1510px;padding:18px clamp(22px,5vw,80px) 75px}
+.page-themes .themes-view>.back{position:absolute;top:2px;left:3.5%;margin:0;font-size:12px;color:#d4b681}
+.page-themes .themes-view>h1{font-size:clamp(36px,4vw,66px);color:#f6ead5;text-shadow:0 4px 20px #02070c;margin:17px 0 8px;font-weight:400}
+.page-themes .themes-view>p{font-size:clamp(14px,1.15vw,19px);color:#e8dccb;margin:0 0 20px}
+.page-themes .theme-grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ column-gap:clamp(8px,1.8vw,28px);row-gap:clamp(9px,1.3vw,19px);
+ margin:14px auto 0;
+}
+.page-themes .theme-item{
+ min-height:clamp(165px,18vw,260px);
+ border:0;border-radius:4px;background:
+ linear-gradient(180deg,#03152120 0%,transparent 31%,#03131c32 63%,#031420c0 100%),
+ var(--theme-image) center/cover;
+ box-shadow:none;
+ justify-content:flex-start;
+ gap:6px;
+ padding:clamp(18px,2.5vw,38px) 12px 15px;
+ -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 9%,#000 92%,transparent 100%);
+ mask-image:linear-gradient(to bottom,transparent 0%,#000 9%,#000 92%,transparent 100%);
+}
+.page-themes .theme-icon{
+ width:54px;height:54px;display:grid;place-items:center;
+ border:2px solid #e5b965;border-radius:50%;
+ background:#062631c7;
+ font-size:31px;color:#f6dda1;
+ box-shadow:0 0 19px #f8c67838;
+}
+.page-themes .theme-label{font-size:clamp(18px,1.9vw,28px);color:#fff0d7;text-shadow:0 3px 11px #000}
+.page-themes .theme-description{font-size:clamp(11px,1.05vw,16px);color:#f5e9d8;text-shadow:0 2px 6px #000;padding:0 8px}
+.page-themes .theme-item:hover,.page-themes .theme-item:focus-visible{
+ transform:translateY(-4px) scale(1.02);
+ box-shadow:0 0 25px #e6b76a28;
+}
+.page-themes .theme-search{max-width:400px;margin:8px auto 8px;opacity:.95}
+.page-themes .theme-search:not(.theme-search-active):not(:focus-within){position:absolute;left:-99999px}
+.page-themes .theme-search-active{position:relative;left:auto}
+.page-themes .theme-detail{position:relative;z-index:4}
+html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
+@media(max-width:850px){
+ .page-themes .theme-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .page-themes .theme-item{min-height:210px}
+ .page-themes .themes-view{padding:30px 18px 55px}
+ .page-themes .themes-view>.back{position:relative;left:auto;top:auto;margin-bottom:10px}
+}
+@media(max-width:540px){
+ .page-themes .theme-grid{grid-template-columns:1fr}
+ .page-themes .theme-item{min-height:200px}
+ .page-themes .themes-view>h1{font-size:38px}
+}
