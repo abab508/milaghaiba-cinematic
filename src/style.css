@@ -36,3 +36,82 @@
  .endtimes-page .end-card{height:230px;background:linear-gradient(#07162122,#020d18e8),url('/assets/reference/endtimes.webp') center/cover!important;border-color:#b49a69}
  .endtimes-page .end-card .end-content{opacity:1}
 }
+
+/* Correction des survols: aucune boîte carrée sur les scènes.
+   Les zones interactives restent entières, mais seule une lumière organique
+   (sans bordure, sans surface rectangulaire) réagit au pointeur. */
+.themes-page .topic-node,
+.themes-page .topic-node:hover,
+.themes-page .topic-node:focus-visible{
+  border:0!important;
+  outline:0;
+  border-radius:0;
+  background:transparent!important;
+  backdrop-filter:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+  position:relative;
+  isolation:isolate;
+}
+.themes-page .topic-node::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:-22% -13%;
+  background:radial-gradient(ellipse at 50% 50%,rgba(255,218,136,.24) 0%,rgba(250,201,107,.11) 35%,transparent 72%);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .34s ease-out;
+}
+.themes-page .topic-node:is(:hover,:focus-visible)::before{opacity:1}
+.themes-page .topic-node:focus-visible::after{
+  content:"";
+  position:absolute;
+  width:38px;height:38px;
+  top:10px;left:10px;
+  border:2px solid #f7d999;
+  border-radius:50%;
+  pointer-events:none;
+}
+.endtimes-page .end-card,
+.endtimes-page .end-card:is(:hover,:focus-visible){
+  border-color:transparent!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform:none!important;
+  outline:0;
+}
+.endtimes-page .end-card::before{
+  content:"";
+  position:absolute;inset:-16%;
+  background:radial-gradient(ellipse,rgba(249,207,125,.21),transparent 69%);
+  pointer-events:none;opacity:0;
+  transition:opacity .3s ease;
+}
+.endtimes-page .end-card:is(:hover,:focus-visible)::before{opacity:1}
+.endtimes-page .end-card:focus-visible::after{
+  content:"";position:absolute;inset:4px;border:2px solid #f1d99e;
+  border-radius:14px;pointer-events:none;
+}
+/* Éviter le zoom minime de l'image qui ajoute une interpolation floue. */
+.art-bg{transform:none;image-rendering:auto}
+@media(max-width:850px){
+  .themes-page .topic-node,
+  .themes-page .topic-node:is(:hover,:focus-visible){
+    border:0!important;
+    background:rgba(4,23,36,.78)!important;
+    border-radius:22px;
+    box-shadow:none!important;
+  }
+  .themes-page .topic-node::before{display:none}
+  .themes-page .topic-node>*{opacity:1}
+  .endtimes-page .end-card,
+  .endtimes-page .end-card:is(:hover,:focus-visible){
+    background:linear-gradient(#07162155,#020d18d9),url('/assets/reference/endtimes.webp') center/cover!important;
+    border:0!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+ .topic-node::before,.end-card::before{transition:none!important}
+}
