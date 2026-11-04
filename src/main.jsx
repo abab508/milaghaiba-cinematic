@@ -84,7 +84,7 @@ function App(){
        return <button type="button" key={i} className="reference-hotspot" style={{left:left+'%',top:top+'%',width:width+'%',height:height+'%'}} onClick={()=>{setActiveTheme(i);setNotice('')}} aria-label={name} title={name}/>;
      })}
      <button type="button" className="reference-nav-home" aria-label={t.home} onClick={goHome}/>
-     <button type="button" className="reference-nav-themes" aria-label={t.themes} onClick={()=>{setReferenceMenu(null);setActiveTheme(null);setQuery('' )}}/>
+     <button type="button" className="reference-nav-themes" aria-label={t.themes} onClick={()=>{setReferenceMenu(null);setActiveTheme(null);setQuery('' )}}><span className="reference-themes-text">{t.themes}</span></button>
      <button type="button" className="reference-nav-chapters" aria-label={t.chapters} onClick={()=>setReferenceMenu('chapters')}/>
      <button type="button" className="reference-nav-index" aria-label={t.index} onClick={()=>setReferenceMenu('index')}/>
      <button type="button" className="reference-nav-search" aria-label={t.search} onClick={()=>setReferenceMenu('search')}/>
