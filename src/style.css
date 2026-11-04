@@ -147,3 +147,6 @@ html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
  .page-themes .theme-item{min-height:200px}
  .page-themes .themes-view>h1{font-size:38px}
 }
+
+/* Recherche des thèmes toujours accessible et testable. */
+.page-themes .theme-search{position:relative!important;left:auto!important;opacity:1;visibility:visible}
