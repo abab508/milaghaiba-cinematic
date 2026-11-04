@@ -45,8 +45,8 @@ function App(){
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
  useEffect(()=>{if(reduced)setEffects(false)},[reduced]);
  const goExplore=(openSearch=false,alphabet=false)=>{setPage('themes');setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
- const goHome=()=>{setPage('home');setNotice('');window.scrollTo({top:0,behavior:'auto'})};
- const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim())).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
+ const goHome=()=>{setPage('home');setNotice('');setQuery('');setActiveTheme(null);window.scrollTo({top:0,behavior:'auto'})};
+ const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>!query.trim()||(indexOpen&&query.trim().length===1?name.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLocaleUpperCase().startsWith(query.toLocaleUpperCase()):name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
  return <div className={'app '+(effects?'animated':'still')}>
   <div className="scene" aria-hidden="true">
    <img className="scene-base" src="/assets/scene/architecture.webp" alt=""/>
@@ -55,6 +55,8 @@ function App(){
    <img className="scene-moon" src="/assets/scene/moon.png" alt=""/>
    <img className="scene-lantern" src="/assets/scene/lantern.png" alt=""/>
    <div className="lantern-light"/>
+   <div className="sea-reflection"/>
+   <div className="book-reflection"/>
    <div className="scene-tint"/>
    <div className="scene-vignette"/>
   </div>
