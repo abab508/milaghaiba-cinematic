@@ -60,3 +60,17 @@ html[dir=rtl] .theme-detail{text-align:right}
   .sea-reflection{clip-path:polygon(25% 68%,100% 63%,100% 85%,48% 88%)}
   .book-reflection{clip-path:polygon(0 76%,35% 76%,32% 87%,0 87%)}
 }
+
+/* Fidélité de cadrage : proportions mesurées sur la première vignette de référence.
+   Aucun objet et aucune image ne sont ajoutés. */
+.scene{position:fixed;inset:0;height:100svh}
+@media(min-width:901px){
+  .hero h1{font-size:clamp(54px,5.55vw,90px);letter-spacing:-.03em}
+  .hero-subtitle{font-size:clamp(24px,2.2vw,35px)}
+  .hero-description{font-size:clamp(14px,1.07vw,17px)}
+  .hero-content{max-width:780px}
+}
+@media(max-width:600px){
+  .hero h1{font-size:clamp(48px,11vw,68px)}
+  .scene{height:100svh}
+}
