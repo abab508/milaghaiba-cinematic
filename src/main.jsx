@@ -39,12 +39,14 @@ function App(){
  const [notice,setNotice]=useState('');
  const [query,setQuery]=useState('');
  const [searchOpen,setSearchOpen]=useState(false);
+ const [indexOpen,setIndexOpen]=useState(false);
+ const [activeTheme,setActiveTheme]=useState(null);
  const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
  useEffect(()=>{if(reduced)setEffects(false)},[reduced]);
- const goExplore=(openSearch=false)=>{setPage('themes');setNotice('');setSearchOpen(openSearch);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
+ const goExplore=(openSearch=false,alphabet=false)=>{setPage('themes');setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
  const goHome=()=>{setPage('home');setNotice('');window.scrollTo({top:0,behavior:'auto'})};
- const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()));
+ const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim())).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
  return <div className={'app '+(effects?'animated':'still')}>
   <div className="scene" aria-hidden="true">
    <img className="scene-base" src="/assets/scene/architecture.webp" alt=""/>
@@ -62,7 +64,7 @@ function App(){
     <button onClick={goHome} aria-current={page==='home'?'page':undefined}>{t.home}</button>
     <button onClick={()=>goExplore(false)} aria-current={page==='themes'?'page':undefined}>{t.themes}</button>
     <button onClick={()=>goExplore(false)}>{t.chapters}</button>
-    <button onClick={()=>goExplore(false)}>{t.index}</button>
+    <button onClick={()=>goExplore(false,true)}>{t.index}</button>
     <button onClick={()=>goExplore(true)}>{t.search}</button>
    </nav>
    <div className="controls">
@@ -85,12 +87,14 @@ function App(){
    </div>
   </main> : <main className="themes-view">
    <button className="back" onClick={goHome}>← {t.back}</button>
-   <h1>{t.explore}</h1><p>{t.exploreDetail}</p>
-   <form className={'theme-search '+(searchOpen?'theme-search-active':'')} onSubmit={e=>e.preventDefault()} role="search"><label className="visually-hidden" htmlFor="theme-query">{t.queryPlaceholder}</label><span aria-hidden="true">⌕</span><input id="theme-query" type="search" placeholder={t.queryPlaceholder} value={query} onChange={e=>setQuery(e.target.value)}/></form>
+   <h1>{indexOpen?t.index:t.explore}</h1><p>{t.exploreDetail}</p>
+   {indexOpen&&<div className="alphabet" aria-label="Index alphabétique">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter=><button key={letter} onClick={()=>{setQuery(letter);setActiveTheme(null)}} aria-pressed={query.toUpperCase()===letter}>{letter}</button>)}<button onClick={()=>setQuery('')}>Tout</button></div>}
+   <form className={'theme-search '+(searchOpen?'theme-search-active':'')} onSubmit={e=>e.preventDefault()} role="search"><label className="visually-hidden" htmlFor="theme-query">{t.queryPlaceholder}</label><span aria-hidden="true">⌕</span><input id="theme-query" type="search" placeholder={t.queryPlaceholder} value={query} onChange={e=>{setQuery(e.target.value);setActiveTheme(null)}}/></form>
    <div className="theme-grid">
-    {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>setNotice(t.soon)} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/scene/architecture.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><small aria-hidden="true">→</small></button>)}
+    {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>{setActiveTheme(i);setNotice('')}} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/scene/architecture.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><small aria-hidden="true">→</small></button>)}
    </div>
    {visibleThemes.length===0&&<p role="status">{t.noResults}</p>}
+   {activeTheme!==null&&<section className="theme-detail" aria-live="polite"><img src={activeTheme<8?`/assets/chapters/${activeTheme+1}.webp`:'/assets/scene/architecture.webp'} alt=""/><div><h2>{t.categories[activeTheme]}</h2><p>{t.soon}</p><button className="detail-back" onClick={()=>setActiveTheme(null)}>← {t.back}</button></div></section>}
    {notice&&<p className="notice" role="status">{notice}</p>}
   </main>}
   <div className="screen-grain" aria-hidden="true"/>
