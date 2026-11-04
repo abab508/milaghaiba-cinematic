@@ -47,11 +47,12 @@ function App(){
  const [activeTheme,setActiveTheme]=useState(null);
  const [referenceLoaded,setReferenceLoaded]=useState(false);
  const [referenceFailed,setReferenceFailed]=useState(false);
+ const [referenceMenu,setReferenceMenu]=useState(null);
  const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
  useEffect(()=>{if(reduced)setEffects(false)},[reduced]);
- const goExplore=(openSearch=false,alphabet=false)=>{setPage('themes');setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
- const goHome=()=>{setPage('home');setNotice('');setQuery('');setActiveTheme(null);window.scrollTo({top:0,behavior:'auto'})};
+ const goExplore=(openSearch=false,alphabet=false)=>{setPage('themes');setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);setReferenceMenu(openSearch?'search':alphabet?'index':null);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
+ const goHome=()=>{setPage('home');setNotice('');setQuery('');setActiveTheme(null);setReferenceMenu(null);window.scrollTo({top:0,behavior:'auto'})};
  const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>!query.trim()||(indexOpen&&query.trim().length===1?name.toLocaleUpperCase().startsWith(query.trim().toLocaleUpperCase()):name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
  return <div className={'app '+(effects?'animated':'still')+' page-'+page+(referenceLoaded&&page==='themes'?' has-theme-reference':'')}>
   {page==='home'&&<div className="scene" aria-hidden="true">
@@ -106,12 +107,26 @@ function App(){
        return <button type="button" key={i} className="reference-hotspot" style={{left:left+'%',top:top+'%',width:width+'%',height:height+'%'}} onClick={()=>{setActiveTheme(i);setNotice('')}} aria-label={name} title={name}/>;
      })}
      <button type="button" className="reference-nav-home" aria-label={t.home} onClick={goHome}/>
+     <button type="button" className="reference-nav-themes" aria-label={t.themes} onClick={()=>{setReferenceMenu(null);setActiveTheme(null);setQuery('' )}}/>
+     <button type="button" className="reference-nav-chapters" aria-label={t.chapters} onClick={()=>setReferenceMenu('chapters')}/>
+     <button type="button" className="reference-nav-index" aria-label={t.index} onClick={()=>setReferenceMenu('index')}/>
+     <button type="button" className="reference-nav-search" aria-label={t.search} onClick={()=>setReferenceMenu('search')}/>
    </div>
+   {referenceLoaded&&referenceMenu&&<section className="reference-panel" aria-label={referenceMenu==='search'?t.search:referenceMenu==='index'?t.index:t.chapters}>
+     <button className="reference-panel-close" aria-label="Fermer" onClick={()=>{setReferenceMenu(null);setQuery('')}}>×</button>
+     <h2>{referenceMenu==='search'?t.search:referenceMenu==='index'?t.index:t.chapters}</h2>
+     {referenceMenu==='index'&&<div className="reference-letters">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter=><button key={letter} onClick={()=>setQuery(letter)}>{letter}</button>)}</div>}
+     <label className="visually-hidden" htmlFor="reference-search">{t.queryPlaceholder}</label>
+     <input id="reference-search" placeholder={t.queryPlaceholder} value={query} onChange={e=>setQuery(e.target.value)}/>
+     <div className="reference-results">
+       {t.categories.map((name,i)=>({name,i})).filter(({name})=>!query||name.toLocaleLowerCase().includes(query.toLocaleLowerCase())||(referenceMenu==='index'&&name.toLocaleUpperCase().startsWith(query.toLocaleUpperCase()))).map(({name,i})=><button key={i} onClick={()=>{setActiveTheme(i);setReferenceMenu(null);setQuery('')}}>{name}</button>)}
+     </div>
+   </section>}
    {!referenceLoaded&&<div className="theme-grid">
     {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>{setActiveTheme(i);setNotice('')}} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/chapters/8.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><span className="theme-description">{themeDescriptions[lang][i]}</span></button>)}
    </div>}
    {!referenceLoaded&&visibleThemes.length===0&&<p role="status">{t.noResults}</p>}
-   {activeTheme!==null&&<section className="theme-detail" aria-live="polite"><img src={activeTheme<8?`/assets/chapters/${activeTheme+1}.webp`:'/assets/scene/architecture.webp'} alt=""/><div><h2>{t.categories[activeTheme]}</h2><p>{t.soon}</p><button className="detail-back" onClick={()=>setActiveTheme(null)}>← {t.back}</button></div></section>}
+   {activeTheme!==null&&<section className={'theme-detail'+(referenceLoaded?' reference-detail':'')} aria-live="polite"><img src={activeTheme<8?`/assets/chapters/${activeTheme+1}.webp`:'/assets/scene/architecture.webp'} alt=""/><div><h2>{t.categories[activeTheme]}</h2><p>{t.soon}</p><button className="detail-back" onClick={()=>setActiveTheme(null)}>← {t.back}</button></div></section>}
    {notice&&<p className="notice" role="status">{notice}</p>}
   </main>}
   <div className="screen-grain" aria-hidden="true"/>
