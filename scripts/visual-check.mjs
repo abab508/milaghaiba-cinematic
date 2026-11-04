@@ -17,6 +17,14 @@ async function checkViewport(width, height, name) {
   await page.locator('.theme-reference-stage').waitFor({ state: 'visible' });
   assert(await page.locator('.theme-reference-image').evaluate(img => img.complete && img.naturalWidth > 0), name + ': image panoramique chargée');
   assert(await page.locator('.reference-hotspot').count() === 9, name + ': neuf thèmes interactifs');
+  const themeLink = page.locator('.reference-nav-themes');
+  const beforeHover = await themeLink.locator('.reference-themes-text').evaluate(el => getComputedStyle(el, '::after').opacity);
+  assert(Number(beforeHover) === 0, name + ': Themes has no permanent underline');
+  await themeLink.hover({ force: true });
+  const afterHover = await themeLink.locator('.reference-themes-text').evaluate(el => getComputedStyle(el, '::after').opacity);
+  assert(Number(afterHover) > 0, name + ': Themes underline appears on hover');
+  await page.mouse.move(0,0);
+
   assert(await page.locator('.theme-item').count() === 0, name + ': anciennes cartes absentes');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2);
   assert(!overflow, name + ': sans débordement horizontal');
