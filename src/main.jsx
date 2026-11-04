@@ -83,11 +83,12 @@ function App(){
        const [left,top,width,height]=positions[i];
        return <button type="button" key={i} className="reference-hotspot" style={{left:left+'%',top:top+'%',width:width+'%',height:height+'%'}} onClick={()=>{setActiveTheme(i);setNotice('')}} aria-label={name} title={name}/>;
      })}
-     <button type="button" className="reference-nav-home" aria-label={t.home} onClick={goHome}/>
-     <button type="button" className="reference-nav-themes" aria-label={t.themes} onClick={()=>{setReferenceMenu(null);setActiveTheme(null);setQuery('' )}}><span className="reference-themes-text">{t.themes}</span></button>
-     <button type="button" className="reference-nav-chapters" aria-label={t.chapters} onClick={()=>setReferenceMenu('chapters')}/>
-     <button type="button" className="reference-nav-index" aria-label={t.index} onClick={()=>setReferenceMenu('index')}/>
-     <button type="button" className="reference-nav-search" aria-label={t.search} onClick={()=>setReferenceMenu('search')}/>
+     <div className="reference-navigation-backdrop" aria-hidden="true"/>
+     <button type="button" className="reference-nav-home reference-nav-link" aria-label={t.home} onClick={goHome}><span>{t.home}</span></button>
+     <button type="button" className="reference-nav-themes reference-nav-link" aria-label={t.themes} onClick={()=>{setReferenceMenu(null);setActiveTheme(null);setQuery('')}}><span>{t.themes}</span></button>
+     <button type="button" className="reference-nav-chapters reference-nav-link" aria-label={t.chapters} onClick={()=>setReferenceMenu('chapters')}><span>{t.chapters}</span></button>
+     <button type="button" className="reference-nav-index reference-nav-link" aria-label={t.index} onClick={()=>setReferenceMenu('index')}><span>{t.index}</span></button>
+     <button type="button" className="reference-nav-search reference-nav-link" aria-label={t.search} onClick={()=>setReferenceMenu('search')}><span>{t.search}</span></button>
    </div>
    {referenceLoaded&&referenceMenu&&<section className="reference-panel" aria-label={referenceMenu==='search'?t.search:referenceMenu==='index'?t.index:t.chapters}>
      <button className="reference-panel-close" aria-label="Fermer" onClick={()=>{setReferenceMenu(null);setQuery('')}}>×</button>
