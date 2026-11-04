@@ -188,3 +188,22 @@ html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
  .page-home .scene-moon{right:3%;top:16%;width:100px;height:100px}
  .page-home .scene-lantern{width:160px;height:300px;opacity:.58}
 }
+
+
+/* Affichage fidèle de la maquette d'origine une fois le visuel chargé.
+   Le texte de l'image n'est jamais recréé ni superposé. */
+.theme-reference-stage[hidden]{display:none!important}
+.theme-reference-stage{position:relative;width:min(100vw,177.68svh);aspect-ratio:1672 / 941;margin:0 auto;isolation:isolate}
+.theme-reference-image{display:block;width:100%;height:100%;object-fit:contain;user-select:none;pointer-events:none}
+.reference-hotspot,.reference-nav-home{position:absolute;padding:0;border:1px solid transparent;background:transparent;color:transparent;border-radius:8px;cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s}
+.reference-hotspot:hover,.reference-hotspot:focus-visible,.reference-nav-home:focus-visible{border-color:#f6d58daa;box-shadow:0 0 18px #eac27955;background:#eac27913;outline:0}
+.reference-hotspot:focus-visible,.reference-nav-home:focus-visible{outline:3px solid #f6d58d;outline-offset:1px}
+.reference-nav-home{left:23%;top:0;width:9%;height:7%}
+.has-theme-reference .header{display:none}
+.has-theme-reference .themes-view{width:100%;max-width:none;padding:0;margin:0}
+.has-theme-reference .themes-view>.back,.has-theme-reference .themes-view>h1,.has-theme-reference .themes-view>p,.has-theme-reference .theme-search,.has-theme-reference .alphabet{display:none}
+.has-theme-reference .themes-view>.theme-detail{position:relative;z-index:9}
+.has-theme-reference .screen-grain{display:none}
+.has-theme-reference{background:#041724}
+@media(max-aspect-ratio:1672/941){.theme-reference-stage{width:100vw}}
+@media(prefers-reduced-motion:reduce){.reference-hotspot{transition:none!important}}
