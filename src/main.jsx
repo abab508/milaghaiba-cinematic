@@ -27,6 +27,10 @@ const copy = {
  soundOn:'تفعيل الصوت',soundOff:'إيقاف الصوت',motionOn:'تقليل الحركة',motionOff:'تفعيل الحركة',soon:'ستتم إضافة تفاصيل الأبواب بعد هذا المشهد الأول.' }
 };
 const icons=['✧','☪','۞','♡','❋','☄','✦','✣','◇'];
+const themeDescriptions={
+fr:['Tawhîd, foi, anges, prophètes…','Prière, jeûne, zakât, pèlerinage…','Sa biographie, ses qualités…','Famille, mariage, droits…','Éthique, morale, bonnes actions…','Événements, avertissements…','Savoir, apprentissage…','Santé, guérison, prévention…','Divers, lectures, invocations…'],
+en:['Faith, angels, prophets…','Prayer, fasting, pilgrimage…','His biography and qualities…','Family, marriage, rights…','Ethics and good deeds…','Events and warnings…','Learning and knowledge…','Health and healing…','Readings and invocations…'],
+ar:['التوحيد والإيمان والأنبياء…','الصلاة والصيام والحج…','سيرته وصفاته…','الأسرة والزواج والحقوق…','الأخلاق والآداب…','الأحداث والعلامات…','العلم والتعلّم…','الصحة والعلاج…','القراءة والدعاء…']};
 function App(){
  const reduced=useReducedMotion();
  const [lang,setLang]=useState('fr');
@@ -47,8 +51,8 @@ function App(){
  const goExplore=(openSearch=false,alphabet=false)=>{setPage('themes');setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
  const goHome=()=>{setPage('home');setNotice('');setQuery('');setActiveTheme(null);window.scrollTo({top:0,behavior:'auto'})};
  const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>!query.trim()||(indexOpen&&query.trim().length===1?name.toLocaleUpperCase().startsWith(query.trim().toLocaleUpperCase()):name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
- return <div className={'app '+(effects?'animated':'still')}>
-  <div className="scene" aria-hidden="true">
+ return <div className={'app '+(effects?'animated':'still')+' page-'+page}>
+  {page==='home'&&<div className="scene" aria-hidden="true">
    <img className="scene-base" src="/assets/scene/architecture.webp" alt=""/>
    <img className="scene-stars" src="/assets/scene/stars.png" alt=""/>
    <img className="scene-clouds" src="/assets/scene/clouds.png" alt=""/>
@@ -59,7 +63,7 @@ function App(){
    <div className="book-reflection"/>
    <div className="scene-tint"/>
    <div className="scene-vignette"/>
-  </div>
+  </div>}
   <header className="header">
    <button className="brand" onClick={goHome} aria-label="La Lumière des Hadiths — Accueil"><span className="brand-icon">⌂<span>▱</span></span><span>La Lumière<br/>des Hadiths</span></button>
    <nav className="navigation" aria-label="Navigation principale">
@@ -93,7 +97,7 @@ function App(){
    {indexOpen&&<div className="alphabet" aria-label="Index alphabétique">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter=><button key={letter} onClick={()=>{setQuery(letter);setActiveTheme(null)}} aria-pressed={query.toUpperCase()===letter}>{letter}</button>)}<button onClick={()=>setQuery('')}>Tout</button></div>}
    <form className={'theme-search '+(searchOpen?'theme-search-active':'')} onSubmit={e=>e.preventDefault()} role="search"><label className="visually-hidden" htmlFor="theme-query">{t.queryPlaceholder}</label><span aria-hidden="true">⌕</span><input id="theme-query" type="search" placeholder={t.queryPlaceholder} value={query} onChange={e=>{setQuery(e.target.value);setActiveTheme(null)}}/></form>
    <div className="theme-grid">
-    {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>{setActiveTheme(i);setNotice('')}} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/scene/architecture.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><small aria-hidden="true">→</small></button>)}
+    {visibleThemes.map(({name,i})=><button key={i} className="theme-item" onClick={()=>{setActiveTheme(i);setNotice('')}} style={{'--theme-image':i<8?`url(/assets/chapters/${i+1}.webp)`:'url(/assets/chapters/8.webp)'}}><span className="theme-icon">{icons[i]}</span><span className="theme-label">{name}</span><span className="theme-description">{themeDescriptions[lang][i]}</span></button>)}
    </div>
    {visibleThemes.length===0&&<p role="status">{t.noResults}</p>}
    {activeTheme!==null&&<section className="theme-detail" aria-live="polite"><img src={activeTheme<8?`/assets/chapters/${activeTheme+1}.webp`:'/assets/scene/architecture.webp'} alt=""/><div><h2>{t.categories[activeTheme]}</h2><p>{t.soon}</p><button className="detail-back" onClick={()=>setActiveTheme(null)}>← {t.back}</button></div></section>}
