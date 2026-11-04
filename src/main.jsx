@@ -34,6 +34,8 @@ ar:['التوحيد والإيمان والأنبياء…','الصلاة وال
 function App(){
  const reduced=useReducedMotion();
  const [lang,setLang]=useState('fr');
+ const [settingsOpen,setSettingsOpen]=useState(false);
+ const [displayMode,setDisplayMode]=useState('dark');
  const page='themes';
  const [effects,setEffects]=useState(!reduced);
  const [sound,setSound]=useState(false);
@@ -52,9 +54,10 @@ function App(){
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
  useEffect(()=>{if(reduced)setEffects(false)},[reduced]);
  const goExplore=(openSearch=false,alphabet=false)=>{setNotice('');setActiveTheme(null);setSearchOpen(openSearch);setIndexOpen(alphabet);setReferenceMenu(openSearch?'search':alphabet?'index':null);window.scrollTo({top:0,behavior:effects?'smooth':'auto'})};
- const goHome=()=>{setNotice('');setQuery('');setActiveTheme(null);setReferenceMenu(null);window.scrollTo({top:0,behavior:'auto'})};
+ const goHome=()=>{setNotice('');setQuery('');setActiveTheme(null);setReferenceMenu(null);setSettingsOpen(false);window.scrollTo({top:0,behavior:'auto'})};
+ const selectLanguage=(next)=>{setLang(next);setReferenceMenu(null);setActiveTheme(null);setSettingsOpen(false);setQuery('')};
  const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>!query.trim()||(indexOpen&&query.trim().length===1?name.toLocaleUpperCase().startsWith(query.trim().toLocaleUpperCase()):name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
- return <div className={'app '+(effects?'animated':'still')+' page-'+page+(referenceLoaded?' has-theme-reference':'')}>
+ return <div className={'app '+(effects?'animated':'still')+' page-'+page+(referenceLoaded?' has-theme-reference':'')+(lang!=='fr'?' locale-translation':'')+' mode-'+displayMode}>
   <header className="header">
    <button className="brand" onClick={goHome} aria-label="La Lumière des Hadiths — Accueil"><span className="brand-icon">⌂<span>▱</span></span><span>La Lumière<br/>des Hadiths</span></button>
    <nav className="navigation" aria-label="Navigation principale">
@@ -81,15 +84,31 @@ function App(){
      {t.categories.map((name,i)=>{
        const positions=[[8,25,26,23],[35,25,30,23],[67,25,29,23],[8,49,26,20],[35,49,30,20],[67,49,29,20],[8,70,26,22],[35,70,30,22],[67,70,29,22]];
        const [left,top,width,height]=positions[i];
-       return <button type="button" key={i} className="reference-hotspot" style={{left:left+'%',top:top+'%',width:width+'%',height:height+'%'}} onClick={()=>{setActiveTheme(i);setNotice('')}} aria-label={name} title={name}/>;
+       return <button type="button" key={i} className="reference-hotspot" style={{left:left+'%',top:top+'%',width:width+'%',height:height+'%'}} onClick={()=>{setActiveTheme(i);setNotice('')}} aria-label={name}><span className="visually-hidden">{name}</span></button>;
      })}
+     {lang!=='fr'&&<div className="translated-scene-labels" aria-live="polite">
+       <div className="translated-heading"><h1>{t.explore}</h1><p>{t.exploreDetail}</p></div>
+       {t.categories.map((name,i)=><div className={'translated-topic translated-topic-'+i} key={i} dir={lang==='ar'?'rtl':'ltr'}><strong>{name}</strong><small>{themeDescriptions[lang][i]}</small></div>)}
+     </div>}
      <div className="reference-navigation-backdrop" aria-hidden="true"/>
      <button type="button" className="reference-nav-home reference-nav-link" aria-label={t.home} onClick={goHome}><span>{t.home}</span></button>
      <button type="button" className="reference-nav-themes reference-nav-link" aria-label={t.themes} onClick={()=>{setReferenceMenu(null);setActiveTheme(null);setQuery('')}}><span>{t.themes}</span></button>
      <button type="button" className="reference-nav-chapters reference-nav-link" aria-label={t.chapters} onClick={()=>setReferenceMenu('chapters')}><span>{t.chapters}</span></button>
      <button type="button" className="reference-nav-index reference-nav-link" aria-label={t.index} onClick={()=>setReferenceMenu('index')}><span>{t.index}</span></button>
      <button type="button" className="reference-nav-search reference-nav-link" aria-label={t.search} onClick={()=>setReferenceMenu('search')}><span>{t.search}</span></button>
+     <button type="button" className="reference-lang-trigger" aria-label={lang.toUpperCase()+' — '+(lang==='fr'?'Langue':lang==='en'?'Language':'اللغة')} onClick={()=>setSettingsOpen(true)}>{lang.toUpperCase()} <span aria-hidden="true">⌄</span></button>
+     <button type="button" className="reference-fx-trigger" aria-label={effects?t.motionOn:t.motionOff} onClick={()=>setEffects(v=>!v)}><span aria-hidden="true">✦</span></button>
+     <button type="button" className="reference-settings-trigger" aria-label={lang==='fr'?'Paramètres':lang==='en'?'Settings':'الإعدادات'} onClick={()=>setSettingsOpen(true)}><span className="visually-hidden">Settings</span></button>
    </div>
+   {settingsOpen&&<div className="settings-shade" onClick={()=>setSettingsOpen(false)}><section className="settings-dialog" role="dialog" aria-modal="true" aria-label={lang==='fr'?'Paramètres':lang==='en'?'Settings':'الإعدادات'} onClick={e=>e.stopPropagation()}>
+     <button type="button" className="reference-panel-close" aria-label={lang==='fr'?'Fermer':lang==='en'?'Close':'إغلاق'} onClick={()=>setSettingsOpen(false)}>×</button>
+     <h2>{lang==='fr'?'Paramètres':lang==='en'?'Settings':'الإعدادات'}</h2>
+     <label htmlFor="settings-language">{lang==='fr'?'Langue':lang==='en'?'Language':'اللغة'}</label>
+     <select id="settings-language" value={lang} onChange={e=>selectLanguage(e.target.value)}><option value="fr">Français</option><option value="en">English</option><option value="ar">العربية</option></select>
+     <div className="settings-option"><span>{lang==='fr'?'Animations':lang==='en'?'Animations':'الحركات'}</span><button type="button" aria-pressed={effects} onClick={()=>setEffects(x=>!x)}>{effects?(lang==='fr'?'Activées':lang==='en'?'On':'مفعّلة'):(lang==='fr'?'Réduites':lang==='en'?'Reduced':'مخفّضة')}</button></div>
+     <div className="settings-option"><span>{lang==='fr'?'Sons':lang==='en'?'Sound':'الصوت'}</span><button type="button" aria-pressed={sound} onClick={toggleSound}>{sound?(lang==='fr'?'Activés':lang==='en'?'On':'مفعّل'):(lang==='fr'?'Désactivés':lang==='en'?'Off':'مُعطّل')}</button></div>
+     <div className="settings-option"><span>{lang==='fr'?'Apparence':lang==='en'?'Appearance':'المظهر'}</span><select value={displayMode} onChange={e=>setDisplayMode(e.target.value)}><option value="dark">{lang==='fr'?'Sombre':lang==='en'?'Dark':'داكن'}</option><option value="light">{lang==='fr'?'Clair':lang==='en'?'Light':'فاتح'}</option><option value="auto">{lang==='fr'?'Auto':lang==='en'?'Auto':'تلقائي'}</option></select></div>
+   </section></div>}
    {referenceLoaded&&referenceMenu&&<section className="reference-panel" aria-label={referenceMenu==='search'?t.search:referenceMenu==='index'?t.index:t.chapters}>
      <button className="reference-panel-close" aria-label="Fermer" onClick={()=>{setReferenceMenu(null);setQuery('')}}>×</button>
      <h2>{referenceMenu==='search'?t.search:referenceMenu==='index'?t.index:t.chapters}</h2>
