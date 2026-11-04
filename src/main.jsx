@@ -100,7 +100,7 @@ function App(){
    {indexOpen&&<div className="alphabet" aria-label="Index alphabétique">{'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter=><button key={letter} onClick={()=>{setQuery(letter);setActiveTheme(null)}} aria-pressed={query.toUpperCase()===letter}>{letter}</button>)}<button onClick={()=>setQuery('')}>Tout</button></div>}
    <form className={'theme-search '+(searchOpen?'theme-search-active':'')} onSubmit={e=>e.preventDefault()} role="search"><label className="visually-hidden" htmlFor="theme-query">{t.queryPlaceholder}</label><span aria-hidden="true">⌕</span><input id="theme-query" type="search" placeholder={t.queryPlaceholder} value={query} onChange={e=>{setQuery(e.target.value);setActiveTheme(null)}}/></form>
    <div className="theme-reference-stage" hidden={!referenceLoaded} aria-label={t.explore}>
-     <img className="theme-reference-image" src="/assets/themes-reference.webp" alt="" onLoad={()=>setReferenceLoaded(true)} onError={()=>setReferenceFailed(true)} />
+     <img className="theme-reference-image" src="/assets/themes-reference.png" alt="" onLoad={()=>setReferenceLoaded(true)} onError={()=>setReferenceFailed(true)} />
      {t.categories.map((name,i)=>{
        const positions=[[8,25,26,23],[35,25,30,23],[67,25,29,23],[8,49,26,20],[35,49,30,20],[67,49,29,20],[8,70,26,22],[35,70,30,22],[67,70,29,22]];
        const [left,top,width,height]=positions[i];
