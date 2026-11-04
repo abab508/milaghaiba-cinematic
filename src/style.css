@@ -207,3 +207,30 @@ html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
 .has-theme-reference{background:#041724}
 @media(max-aspect-ratio:1672/941){.theme-reference-stage{width:100vw}}
 @media(prefers-reduced-motion:reduce){.reference-hotspot{transition:none!important}}
+
+
+/* Interactive navigation anchored exactly to the baked-in reference image. */
+.reference-nav-themes,.reference-nav-chapters,.reference-nav-index,.reference-nav-search{
+ position:absolute;top:0;height:7%;border:1px solid transparent;background:transparent;border-radius:4px;cursor:pointer;
+}
+.reference-nav-themes{left:32%;width:8%}
+.reference-nav-chapters{left:40%;width:10%}
+.reference-nav-index{left:52%;width:8%}
+.reference-nav-search{left:61%;width:10%}
+.reference-nav-themes:hover,.reference-nav-chapters:hover,.reference-nav-index:hover,.reference-nav-search:hover,
+.reference-nav-themes:focus-visible,.reference-nav-chapters:focus-visible,.reference-nav-index:focus-visible,.reference-nav-search:focus-visible{
+ outline:2px solid #efd38c;outline-offset:2px;background:#dbaa4b18;
+}
+.reference-panel{position:fixed;z-index:20;inset:50% auto auto 50%;transform:translate(-50%,-50%);
+ width:min(92vw,590px);max-height:min(85svh,730px);overflow:auto;background:linear-gradient(160deg,#092936,#03131e);
+ color:#f8e7c7;border:1px solid #d0ac71;border-radius:14px;padding:25px;box-shadow:0 30px 100px #000d;text-align:center}
+.reference-panel h2{font-weight:400;font-size:32px;margin:4px 0 20px;color:#f4d39c}
+.reference-panel input{width:100%;background:#061a25;color:#f9e8cf;border:1px solid #bc9b67;padding:11px 15px;border-radius:30px;font:inherit}
+.reference-panel-close{position:absolute;top:8px;right:12px;border:0;background:transparent;color:#f8dcaa;font-size:29px;cursor:pointer}
+.reference-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:18px}
+.reference-results button,.reference-letters button{border:1px solid #a5875a;border-radius:7px;background:#112f39;color:#ffeed5;padding:10px;cursor:pointer}
+.reference-results button:hover,.reference-letters button:hover{background:#245363}
+.reference-letters{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:13px}
+.reference-letters button{padding:5px 8px;font-size:13px}
+.has-theme-reference .reference-detail{position:fixed;z-index:21;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(90vw,760px);max-height:82svh;overflow:auto;background:#051d2a;box-shadow:0 24px 90px #000e}
+@media(max-width:600px){.reference-panel{padding:18px}.reference-results{grid-template-columns:1fr}}
