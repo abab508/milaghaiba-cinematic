@@ -25,13 +25,26 @@ async function checkViewport(width, height, name) {
   await page.screenshot({ path: 'previews/accueil-' + name + '.png', fullPage: true, animations: 'disabled' });
   await page.getByRole('button', { name: /Commencer l’exploration/i }).click();
   await page.getByRole('heading', { name: 'Choisissez un thème' }).waitFor();
-  assert(await page.locator('.theme-item').count() === 9, name + ': neuf thèmes');
-  await page.screenshot({ path: 'previews/themes-' + name + '.png', fullPage: true, animations: 'disabled' });
-  const q = page.locator('#theme-query');
-  await q.fill('croyance');
-  assert(await page.locator('.theme-item').count() === 1, name + ': recherche des thèmes');
-  await page.locator('.theme-item').click();
-  assert(await page.locator('.theme-detail').count() === 1, name + ': aperçu du thème');
+  const hasReference = await page.locator('.theme-reference-stage').isVisible();
+  if (hasReference) {
+    assert(await page.locator('.theme-reference-image').evaluate(img => img.complete && img.naturalWidth > 0), name + ': image de maquette chargée');
+    assert(await page.locator('.reference-hotspot').count() === 9, name + ': neuf zones interactives exactes');
+    assert(await page.locator('.theme-item').count() === 0, name + ': anciennes cartes masquées');
+    await page.screenshot({ path: 'previews/themes-' + name + '.png', fullPage: true, animations: 'disabled' });
+    await page.getByRole('button', { name: 'La croyance' }).last().click();
+    assert(await page.locator('.theme-detail').count() === 1, name + ': thème sélectionnable sur la maquette');
+    await page.locator('.detail-back').click();
+    await page.locator('.reference-nav-home').click();
+    assert(await page.getByRole('heading', { name: 'Les Hadiths' }).count() === 1, name + ': retour accueil');
+  } else {
+    assert(await page.locator('.theme-item').count() === 9, name + ': neuf thèmes en présentation de secours');
+    await page.screenshot({ path: 'previews/themes-' + name + '.png', fullPage: true, animations: 'disabled' });
+    const q = page.locator('#theme-query');
+    await q.fill('croyance');
+    assert(await page.locator('.theme-item').count() === 1, name + ': recherche des thèmes');
+    await page.locator('.theme-item').click();
+    assert(await page.locator('.theme-detail').count() === 1, name + ': aperçu du thème');
+  }
   await page.close();
 }
 try {
