@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, useReducedMotion } from 'motion/react';
 import './style.css';
@@ -33,6 +33,9 @@ function App(){
  const [page,setPage]=useState('home');
  const [effects,setEffects]=useState(!reduced);
  const [sound,setSound]=useState(false);
+ const audioRef=useRef(null);
+ const toggleSound=async()=>{if(audioRef.current){await audioRef.current.close();audioRef.current=null;setSound(false);return;}try{const ctx=new (window.AudioContext||window.webkitAudioContext)();await ctx.resume();const osc=ctx.createOscillator();const gain=ctx.createGain();const filter=ctx.createBiquadFilter();osc.type='sine';osc.frequency.value=110;filter.type='lowpass';filter.frequency.value=180;gain.gain.value=0.012;osc.connect(filter).connect(gain).connect(ctx.destination);osc.start();audioRef.current=ctx;setSound(true)}catch{setSound(false)}};
+ useEffect(()=>()=>{audioRef.current?.close()},[]);
  const [notice,setNotice]=useState('');
  const t=copy[lang];
  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title='La Lumière des Hadiths — Milaghaiba';},[lang]);
@@ -63,7 +66,7 @@ function App(){
     <label className="visually-hidden" htmlFor="lang">Langue / Language</label>
     <select id="lang" value={lang} onChange={e=>setLang(e.target.value)}><option value="fr">FR</option><option value="en">EN</option><option value="ar">AR</option></select>
     <button className="icon-button" aria-label={effects?t.motionOn:t.motionOff} title={effects?t.motionOn:t.motionOff} onClick={()=>setEffects(v=>!v)}>{effects?'✦':'◌'}</button>
-    <button className="icon-button" aria-pressed={sound} aria-label={sound?t.soundOff:t.soundOn} title={sound?t.soundOff:t.soundOn} onClick={()=>setSound(v=>!v)}>{sound?'♫':'♩'}</button>
+    <button className="icon-button" aria-pressed={sound} aria-label={sound?t.soundOff:t.soundOn} title={sound?t.soundOff:t.soundOn} onClick={toggleSound}>{sound?'♫':'♩'}</button>
    </div>
   </header>
   {page==='home'? <main className="hero">
