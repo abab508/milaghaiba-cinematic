@@ -234,3 +234,49 @@ html[dir=rtl] .page-themes .themes-view>.back{left:auto;right:3.5%}
 .reference-letters button{padding:5px 8px;font-size:13px}
 .has-theme-reference .reference-detail{position:fixed;z-index:21;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(90vw,760px);max-height:82svh;overflow:auto;background:#051d2a;box-shadow:0 24px 90px #000e}
 @media(max-width:600px){.reference-panel{padding:18px}.reference-results{grid-template-columns:1fr}}
+
+
+/* The reference image has a baked-in selected Themes tab.
+   Cover only that tiny baked header area with a matching piece of sky,
+   then draw an accessible live label. Glow belongs to hover/focus only. */
+.has-theme-reference .reference-nav-themes{
+ position:absolute;left:32%;top:0;width:8%;height:7%;display:flex;
+ justify-content:center;align-items:flex-start;padding-top:1.2%;
+ overflow:visible;isolation:isolate;color:#f7e9d9;
+}
+.has-theme-reference .reference-nav-themes::before{
+ content:"";position:absolute;z-index:0;
+ left:-8%;top:-8%;width:116%;height:125%;
+ background-image:url('/assets/themes-reference.png');
+ background-repeat:no-repeat;
+ background-size:1077% 1143%;
+ background-position:35% 10%;
+ -webkit-mask-image:radial-gradient(ellipse 76% 70% at 50% 42%,#000 70%,transparent 100%);
+ mask-image:radial-gradient(ellipse 76% 70% at 50% 42%,#000 70%,transparent 100%);
+ pointer-events:none;
+}
+.has-theme-reference .reference-themes-text{
+ position:relative;z-index:1;display:inline-block;
+ color:#f7eadc;font-family:Georgia,'Times New Roman',serif;
+ font-size:clamp(12px,1.4vw,23px);font-weight:500;
+ line-height:1.15;text-shadow:0 2px 3px #00131a;
+}
+.has-theme-reference .reference-themes-text::after{
+ content:"";position:absolute;left:-9%;right:-9%;bottom:-12px;height:3px;
+ border-radius:50%;opacity:0;transform:scaleX(.65);
+ background:radial-gradient(ellipse at center,#fff9cc 0%,#f8ca62 34%,#b77f1d 66%,transparent 100%);
+ box-shadow:0 0 14px 4px #ffc35255;
+ transition:opacity .24s ease,transform .24s ease;
+}
+.has-theme-reference .reference-nav-themes:hover .reference-themes-text,
+.has-theme-reference .reference-nav-themes:focus-visible .reference-themes-text{color:#f3c774;}
+.has-theme-reference .reference-nav-themes:hover .reference-themes-text::after,
+.has-theme-reference .reference-nav-themes:focus-visible .reference-themes-text::after{
+ opacity:1;transform:scaleX(1);
+}
+.has-theme-reference .reference-nav-themes:hover,.has-theme-reference .reference-nav-themes:focus-visible{
+ background:transparent;box-shadow:none;border-color:transparent;outline:none;
+}
+@media(prefers-reduced-motion:reduce){
+ .has-theme-reference .reference-themes-text::after{transition:none}
+}
