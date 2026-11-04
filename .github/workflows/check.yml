@@ -29,11 +29,8 @@ jobs:
           done
           cat /tmp/milaghaiba-preview.log
           exit 1
-      - name: Screenshot desktop and mobile
-        run: |
-          mkdir -p previews
-          npx playwright screenshot --browser chromium --viewport-size "1440,900" --wait-for-timeout 1800 http://127.0.0.1:4173/ previews/accueil-desktop.png
-          npx playwright screenshot --browser chromium --viewport-size "390,844" --wait-for-timeout 1800 http://127.0.0.1:4173/ previews/accueil-mobile.png
+      - name: Test pages and capture real screenshots
+        run: node scripts/visual-check.mjs
       - name: Upload previews
         if: always()
         uses: actions/upload-artifact@v4
