@@ -18,10 +18,10 @@ async function checkViewport(width, height, name) {
   assert(await page.locator('.theme-reference-image').evaluate(img => img.complete && img.naturalWidth > 0), name + ': image panoramique chargée');
   assert(await page.locator('.reference-hotspot').count() === 9, name + ': neuf thèmes interactifs');
   const themeLink = page.locator('.reference-nav-themes');
-  const beforeHover = await themeLink.locator('.reference-themes-text').evaluate(el => getComputedStyle(el, '::after').opacity);
+  const beforeHover = await themeLink.locator('span').evaluate(el => getComputedStyle(el, '::after').opacity);
   assert(Number(beforeHover) === 0, name + ': Themes has no permanent underline');
   await themeLink.hover({ force: true });
-  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.reference-themes-text'), '::after').opacity) > .5);
+  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.reference-nav-themes span'), '::after').opacity) > .5);
   assert(true, name + ': Themes underline appears on hover');
   await page.mouse.move(0,0);
 
