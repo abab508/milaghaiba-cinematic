@@ -53,7 +53,7 @@ function App(){
  const visibleThemes=t.categories.map((name,i)=>({name,i})).filter(({name})=>!query.trim()||(indexOpen&&query.trim().length===1?name.toLocaleUpperCase().startsWith(query.trim().toLocaleUpperCase()):name.toLocaleLowerCase().includes(query.toLocaleLowerCase().trim()))).sort((a,b)=>indexOpen?a.name.localeCompare(b.name,lang):a.i-b.i);
  return <div className={'app '+(effects?'animated':'still')+' page-'+page}>
   {page==='home'&&<div className="scene" aria-hidden="true">
-   <img className="scene-base" src="/assets/scene/architecture.webp" alt=""/>
+   <div className="scene-base scene-clean-backdrop" />
    <img className="scene-stars" src="/assets/scene/stars.png" alt=""/>
    <img className="scene-clouds" src="/assets/scene/clouds.png" alt=""/>
    <img className="scene-moon" src="/assets/scene/moon.png" alt=""/>
